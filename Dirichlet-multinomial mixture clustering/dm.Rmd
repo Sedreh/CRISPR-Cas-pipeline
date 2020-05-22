@@ -1,0 +1,44 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+```{r}
+library(DirichletMultinomial)
+library(dplyr)
+library(parallel)
+```
+
+```{r}
+
+counts <- read.csv('domains_pfam/sample_domain_counts.tsv', sep='\t', row.names=1)
+# remove extremely rare domains and extremely sparse samples
+sparse.sample <- rowSums(counts) < 5
+samples.filtered <- counts[!sparse.sample,]
+rare.domain <- (colSums(samples.filtered == 0) / nrow(samples.filtered)) > 0.95
+counts.filtered <- samples.filtered[,!rare.domain]
+sum(rowSums(counts.filtered) == 0)
+```
+
+```{r}
+workers <- makeCluster(30)
+clusterExport(workers, c('dmn', '%>%', 'counts.filtered'))
+k <- seq(1:30)
+fits <- parLapply(workers, k, function(k){as.matrix(counts.filtered) %>% dmn(k, FALSE, 139)})
+```
+
+```{r}
+saveRDS(fits, 'domains_pfam/dm_fits.RDS')
+```
+
+```{r}
+scores <- lapply(fits, laplace)
+fit.null <- fits[[1]]
+fit.best <- fits[[which.min(scores)]]
+heatmapdmn(as.matrix(counts.filtered), fit.null, fit.best, 50, transform=sqrt)
+```
+```{r}
+assigned.components <- mixture(fit.best, counts.filtered, assign=TRUE) %>% as.data.frame
+write.table(assigned.components, 'domains_pfam/assigned_components.tsv', sep='\t', quote=FALSE, col.names=FALSE)
+```
