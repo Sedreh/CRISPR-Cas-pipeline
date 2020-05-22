@@ -1,0 +1,63 @@
+---
+title: "tree visualisation"
+author: "Sedreh Nassirnia"
+date: "5/15/2020"
+output: html_document
+---
+
+
+```{r message=FALSE, warning=FALSE}
+library(treeio)
+library(ggtree)
+library(stringr)
+library(phylotools)
+```
+
+```{r}
+# loading the tree
+tree <- read.tree("/home/sedreh/Downloads/bacteria_final_tree_labelled.nwk")
+
+```
+
+```{r}
+#creating group for groupinfo
+n_tree <- tree
+groupInfo <- split(n_tree$tip.label, gsub("(>\\w+)", "", n_tree$tip.label))
+
+#Groupping OTUs for coloring the tree
+final_tree <- groupOTU(n_tree, groupInfo)
+
+
+```
+
+
+```{r}
+
+# circular tree
+
+jpeg("/home/sedreh/Downloads/COL_FILE_bacteria_final_tree.jpeg", width = 10000, height = 10000, res = 300)
+p <- ggtree(final_tree, aes(color=group), aes(x, y), layout="circular", branch.length="none") + geom_tiplab(size=1, aes(angle=angle))  + geom_tree() + theme_tree()+ theme(legend.position='none')
+p
+
+dev.off()
+
+# rectangular tree
+
+jpeg("/home/sedreh/Downloads/BW_F_rec_bacteria_final_tree.jpeg", width = 5000, height = 20000, res = 1080)
+p <- ggtree(final_tree, layout="rectangular", branch.length="none") + geom_tiplab(size=0.2, align=TRUE, linesize=0.1)  + geom_tree() + theme_tree()+ theme(legend.position='none')
+p
+
+
+dev.off()
+
+jpeg("/home/sedreh/Downloads/COL_F_rec_bacteria_final_tree.jpeg", width = 5000, height = 20000, res = 1080)
+
+p <- ggtree(final_tree,aes(color=group), layout="rectangular", branch.length="none") + geom_tiplab(size=0.2, align=TRUE, linesize=0.1)  + geom_tree() + theme_tree()+ theme(legend.position='none')+ geom_text(aes(label=node), hjust=-.1, size=2)
+p
+
+
+dev.off()
+
+
+
+```
