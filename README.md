@@ -1,2 +1,2 @@
-# As yet untitled CRISPR-Cas system mining and analysis pipeline
+# Computational method for exploring the cluster organization of selected protein gene groups across the Phylogenetic tree
 
