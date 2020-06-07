@@ -10,6 +10,7 @@ CRISPR-Cas systems are adaptive immunity that is present in the majority of arch
  using “hmmscan”
  4) Cluster domain structures to find co-occurring HMM models using Dirichlet multinomial mixture clustering method (multivariate Poisson mixture clustering also can be used as it supports positive covariances)
  5) Infer a phylogenetic tree for the bacteria and coloring in higher order, for example, phyla
+ 
         #### for this step:
                   1) Extract a random 16S rRNA sequence for each sample assigned to each cluster
                   2) Produce a masked Multiple Sequence Alignment using ssu-align (Initial raw alignments should be masked);
