@@ -8,6 +8,15 @@ CRISPR-Cas systems are adaptive immunity that is present in the majority of arch
 3) Search for positive matches to the set of HMM models in bacterial genomes using “hmmscan”
 4) Cluster domain structures to find co-occurring HMM models
 5) Infer a phylogenetic tree for the bacteria and coloring in higher order, for example, phyla
+    #### for this step:
+                  1) Extract a 16S sequence for each sample assigned to each cluster
+                  2) Produce a masked Multiple Sequence Alignment using ssu-align;
+                  3) Break the MSA into chunks by genera 
+                  4) Compute a consensus sequence for each chunk using "cons" command from EMBOSS 
+                  5) Lebel all consensus sequences by genera names
+                  6) Infer a phylogenetic tree in fast-tree
+                  7) Root the tree at the midpoint
+
 6) Discovering phylum in each cluster and vice versa (for evolutionary analysis)
 6) Analyze the distribution of CRISPR-Cas clusters across the phylogenetic tree and biological interpretation
 
